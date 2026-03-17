@@ -11,7 +11,8 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #9a9ca5, #8b3163);
+  /* background-color: rgb(132, 136, 32); */
   display: flex;
   justify-content: center;
   align-items: center;

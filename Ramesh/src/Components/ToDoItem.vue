@@ -63,7 +63,7 @@ const save = () => {
   </div>
 </template> -->
 
-<script setup>
+<!-- <script setup>
 defineProps(["todo"]);
 defineEmits(["remove"]);
 </script>
@@ -90,6 +90,69 @@ defineEmits(["remove"]);
 
     <div class="flex gap-2">
       <button @click="editing = true" class="text-blue-400">Edit</button>
+      <button @click="emit('delete', todo.id)" class="text-red-400">
+        Delete
+      </button>
+    </div>
+  </div>
+</template> -->
+
+<script setup>
+import { ref } from "vue";
+
+const props = defineProps(["todo"]);
+const emit = defineEmits(["delete", "toggle", "edit"]);
+
+const editing = ref(false);
+const newText = ref(props.todo.text);
+
+const saveEdit = () => {
+  emit("edit", {
+    id: props.todo.id,
+    text: newText.value,
+  });
+  editing.value = false;
+};
+</script>
+
+<template>
+  <div
+    class="flex justify-between items-center bg-white/10 p-4 rounded-2xl mb-3"
+  >
+    <div class="flex items-center gap-3">
+      <input
+        type="checkbox"
+        :checked="todo.completed"
+        @change="emit('toggle', todo.id)"
+      />
+
+      <span
+        v-if="!editing"
+        :class="todo.completed ? 'line-through text-gray-400' : ''"
+      >
+        {{ todo.text }}
+      </span>
+
+      <input
+        v-if="editing"
+        v-model="newText"
+        class="bg-white/20 rounded px-2"
+      />
+
+      <span class="text-xs px-2 py-1 bg-indigo-500 rounded-lg">
+        {{ todo.priority }}
+      </span>
+    </div>
+
+    <div class="flex gap-2">
+      <button v-if="!editing" @click="editing = true" class="text-blue-400">
+        Edit
+      </button>
+
+      <button v-if="editing" @click="saveEdit" class="text-green-400">
+        Save
+      </button>
+
       <button @click="emit('delete', todo.id)" class="text-red-400">
         Delete
       </button>
