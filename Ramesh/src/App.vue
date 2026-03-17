@@ -1,36 +1,9 @@
 <!-- <script setup>
-import Header from "./Components/Header.vue";
-import { useTaskStore } from "./Stores/taskStore";
-import { onMounted } from "vue";
-const taskStore = useTaskStore();
-onMounted(() => {
-  console.log("Pending Tasks:", taskStore.pendingCount);
-});
-
-import "./Assets/style.css";
-import "./Assets/layout.css";
-import "./Assets/typography.css";
-import ToDoFilter from "./Components/ToDoFilter.vue";
-import ToDoList from "./Components/ToDoList.vue";
-import ToDoInput from "./Components/ToDoInput.vue";
-import ToDoItem from "./Components/ToDoItem.vue";
-import AddTask from "./Components/AddTask.vue";
-</script>
-
-<template>
-  <h1>You did it! Welcome to Vuejs in 2026 January Ramesh</h1>
- 
-  <Header :pendingTasks="10" />
-</template>
-
-<style scoped></style> -->
-
-<script setup>
 import { ref, computed, watch } from "vue";
-import TodoHeader from "./components/TodoHeader.vue";
-import TodoInput from "./components/TodoInput.vue";
-import TodoItem from "./components/TodoItem.vue";
-import TodoFilter from "./components/TodoFilter.vue";
+import TodoHeader from "./Components/ToDoHeader.vue";
+import TodoInput from "./Components/ToDoInput.vue";
+import TodoItem from "./Components/ToDoItem.vue";
+import TodoFilter from "./Components/ToDoFilter.vue";
 
 const todos = ref(JSON.parse(localStorage.getItem("todos")) || []);
 
@@ -51,7 +24,7 @@ watch(
   () => {
     localStorage.setItem("todos", JSON.stringify(todos.value));
   },
-  { deep: true }
+  { deep: true },
 );
 
 const addTodo = (text) => {
@@ -84,4 +57,193 @@ const removeTodo = (id) => {
 
 <style>
 @import "./assets/style.css";
-</style>
+</style> -->
+
+<!-- <script setup>
+import { ref, watch, computed } from "vue";
+import TodoForm from "./components/TodoForm.vue";
+import TodoList from "./components/TodoList.vue";
+
+const todos = ref(JSON.parse(localStorage.getItem("todos")) || []);
+const filter = ref("all");
+const search = ref("");
+const dark = ref(false);
+
+watch(
+  todos,
+  () => {
+    localStorage.setItem("todos", JSON.stringify(todos.value));
+  },
+  { deep: true },
+);
+
+const addTodo = (todo) => {
+  todos.value.push({
+    id: Date.now(),
+    text: todo.text,
+    priority: todo.priority,
+    due: todo.due,
+    completed: false,
+  });
+};
+
+const deleteTodo = (id) => {
+  if (confirm("Delete this task?")) {
+    todos.value = todos.value.filter((t) => t.id !== id);
+  }
+};
+
+const toggleTodo = (id) => {
+  const t = todos.value.find((t) => t.id === id);
+  t.completed = !t.completed;
+};
+
+const editTodo = (id, text) => {
+  const t = todos.value.find((t) => t.id === id);
+  t.text = text;
+};
+
+const filteredTodos = computed(() => {
+  return todos.value
+    .filter((t) =>
+      filter.value === "all"
+        ? true
+        : filter.value === "done"
+          ? t.completed
+          : !t.completed,
+    )
+    .filter((t) => t.text.toLowerCase().includes(search.value.toLowerCase()));
+});
+</script>
+
+<template>
+  <div :class="dark ? 'dark' : ''">
+    <h1>🔥 Vue Todo App</h1>
+
+    <button @click="dark = !dark">Toggle Dark</button>
+
+    <input v-model="search" placeholder="Search..." />
+
+    <select v-model="filter">
+      <option value="all">All</option>
+      <option value="done">Completed</option>
+      <option value="pending">Pending</option>
+    </select>
+
+    <TodoForm @add="addTodo" />
+    <TodoList
+      :todos="filteredTodos"
+      @delete="deleteTodo"
+      @toggle="toggleTodo"
+      @edit="editTodo"
+    />
+  </div>
+</template>
+
+<style>
+.dark {
+  background: #222;
+  color: white;
+  min-height: 100vh;
+}
+</style> -->
+
+<script setup>
+import { ref, watch, computed } from "vue";
+import TodoForm from "./Components/ToDoForm.vue";
+import TodoList from "./Components/ToDoList.vue";
+
+const todos = ref(JSON.parse(localStorage.getItem("todos")) || []);
+const filter = ref("all");
+const search = ref("");
+const dark = ref(false);
+
+watch(
+  todos,
+  () => {
+    localStorage.setItem("todos", JSON.stringify(todos.value));
+  },
+  { deep: true },
+);
+
+const addTodo = (todo) => {
+  todos.value.push({
+    id: Date.now(),
+    text: todo.text,
+    priority: todo.priority,
+    due: todo.due,
+    completed: false,
+  });
+};
+
+const deleteTodo = (id) => {
+  if (confirm("Delete task?")) {
+    todos.value = todos.value.filter((t) => t.id !== id);
+  }
+};
+
+const toggleTodo = (id) => {
+  const t = todos.value.find((t) => t.id === id);
+  t.completed = !t.completed;
+};
+
+const editTodo = (id, text) => {
+  const t = todos.value.find((t) => t.id === id);
+  t.text = text;
+};
+
+const filteredTodos = computed(() => {
+  return todos.value
+    .filter((t) =>
+      filter.value === "all"
+        ? true
+        : filter.value === "done"
+          ? t.completed
+          : !t.completed,
+    )
+    .filter((t) => t.text.toLowerCase().includes(search.value.toLowerCase()));
+});
+</script>
+
+<template>
+  <div
+    class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black flex items-center justify-center p-6"
+  >
+    <div
+      class="w-full max-w-2xl backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-white"
+    >
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold tracking-wide">✨ Premium Todo</h1>
+        <button
+          class="px-4 py-2 bg-white/20 rounded-xl hover:bg-white/30 transition"
+          @click="dark = !dark"
+        >
+          🌙 Theme
+        </button>
+      </div>
+
+      <input
+        v-model="search"
+        placeholder="Search tasks..."
+        class="w-full p-3 rounded-xl bg-white/20 placeholder-gray-300 outline-none mb-4"
+      />
+
+      <select
+        v-model="filter"
+        class="w-full p-3 rounded-xl bg-white/20 outline-none mb-4"
+      >
+        <option value="all">All Tasks</option>
+        <option value="done">Completed</option>
+        <option value="pending">Pending</option>
+      </select>
+
+      <TodoForm @add="addTodo" />
+      <TodoList
+        :todos="filteredTodos"
+        @delete="deleteTodo"
+        @toggle="toggleTodo"
+        @edit="editTodo"
+      />
+    </div>
+  </div>
+</template>
